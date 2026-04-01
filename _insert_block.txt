@@ -1,0 +1,34 @@
+      @keyframes helpSpin15{ from{ transform:rotate(0deg); } to{ transform:rotate(360deg); } }
+
+      /* SETTINGS ball: pinned to bottom-right, same spin cadence (15s) */
+      .airon-tc__settingsball{
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        width: 84px;
+        height: 84px;
+
+        /* override .airon-tc__corner defaults */
+        min-width: 0;
+        padding: 0;
+        border: none;
+        border-radius: 999px;
+        background: transparent;
+        box-shadow: none;
+
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        z-index: 9;
+      }
+      .airon-tc__settingsball::before{
+        content:"";
+        position:absolute;
+        inset:0;
+        border-radius:999px;
+        background:url(/assets/img/settings.jpg) center/contain no-repeat;
+        animation:settingsSpin15 15s linear infinite;
+      }
+      .airon-tc__settingsball:hover{ background:transparent; border:none; box-shadow:none; }
+      .airon-tc__settingsball:active{ transform:scale(0.98); }
+      @keyframes settingsSpin15{ from{ transform:rotate(0deg); } to{ transform:rotate(360deg); } }

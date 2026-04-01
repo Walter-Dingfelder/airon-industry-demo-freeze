@@ -1,0 +1,37 @@
+
+    // Center flip wiring
+    const flip = document.getElementById('coreFlip');
+    const front = document.getElementById('coreLogoBtn');
+    const back = document.getElementById('vaultDoorBtn');
+    const vm = document.getElementById('vaultModal');
+
+    let vaultRevealed = false;
+    const revealVault = ()=>{
+      if(!flip) return;
+      vaultRevealed = true;
+      flip.classList.add('isVaultRevealed');
+    };
+
+    if(front){
+      front.addEventListener('click', (e)=>{
+        e.preventDefault(); e.stopPropagation();
+        if(!vaultRevealed){ revealVault(); }
+      }, true);
+    }
+
+    if(back && vm){
+      back.addEventListener('click', (e)=>{
+        e.preventDefault(); e.stopPropagation();
+        if(!vaultRevealed){ revealVault(); return; }
+        openVault();
+      }, true);
+
+      const ov = vm.querySelector('.airon-vault__overlay');
+      const cl = vm.querySelector('[data-vault-close]');
+      ov && ov.addEventListener('click', closeVault);
+      cl && cl.addEventListener('click', closeVault);
+      vm.querySelectorAll('.airon-vault__boxBtn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{ emitVaultNav(btn.getAttribute('data-vault-target')); closeVault(); });
+      });
+    }
+

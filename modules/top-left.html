@@ -1,0 +1,294 @@
+<!-- =========================================================
+     A.I.R.O.N. — GHOST EVENTS (TOP LEFT / NARROW COLUMN)
+     Fully standalone. Safe for GoDaddy HTML sections.
+========================================================= -->
+
+<style>
+/* ================================
+   A.I.R.O.N. Ghost Events (NARROW)
+   ================================ */
+
+.airon-ghost {
+  /* HARD WIDTH CONTROL — LEFT COLUMN SAFE */
+  --ag-maxw: 360px;      /* ← adjust ONLY if needed */
+  --ag-minw: 280px;
+
+  width: 100%;
+  max-width: var(--ag-maxw);
+  min-width: var(--ag-minw);
+  margin: 0;             /* left-aligned */
+  position: relative;
+  isolation: isolate;    /* prevents glow bleed */
+
+  --ag-ink: rgba(255,255,255,0.92);
+  --ag-muted: rgba(255,255,255,0.62);
+  --ag-dim: rgba(255,255,255,0.40);
+
+  --ag-gold: #ffb400;
+  --ag-green: #2fe08d;
+
+  --ag-outline: rgba(255,255,255,0.08);
+  --ag-radius: 16px;
+  --ag-radius2: 12px;
+
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  color: var(--ag-ink);
+}
+
+.airon-ghost * { box-sizing: border-box; }
+
+.airon-ghost__panel{
+  width:100%;
+  border-radius:var(--ag-radius);
+  background:
+    radial-gradient(600px 240px at 30% 0%, rgba(255,180,0,.08), transparent 55%),
+    linear-gradient(180deg,#141821,#090a0d);
+  border:1px solid var(--ag-outline);
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
+  overflow:hidden;
+}
+
+.airon-ghost__header{
+  padding:16px 16px 10px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.airon-ghost__title{
+  font-weight:800;
+  letter-spacing:.18em;
+  font-size:13px;
+}
+
+.airon-ghost__subtitle{
+  margin-top:6px;
+  font-size:12px;
+  color:var(--ag-muted);
+}
+
+.airon-ghost__list{
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.airon-ghost__card{
+  border-radius:var(--ag-radius2);
+  background:
+    linear-gradient(180deg,#12161e,#0b0d12);
+  border:1px solid rgba(255,255,255,.07);
+  padding:12px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+.airon-ghost__cardTop{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.airon-ghost__cardTitle{
+  font-size:13px;
+  font-weight:700;
+}
+
+.airon-ghost__cardDesc{
+  font-size:11.5px;
+  color:var(--ag-dim);
+  margin-top:2px;
+}
+
+.airon-ghost__watch{
+  border:1px solid rgba(255,180,0,.35);
+  background:rgba(255,180,0,.08);
+  color:#ffb400;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.airon-ghost__meter{
+  margin-top:10px;
+}
+
+.airon-ghost__track{
+  height:6px;
+  border-radius:999px;
+  background:#0a0c10;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.airon-ghost__fill{
+  height:100%;
+  width:calc(var(--pct) * 1%);
+  background:linear-gradient(90deg,#ffb400,#ffd36a);
+  box-shadow:0 0 10px rgba(255,180,0,.35);
+}
+
+.airon-ghost__fill--green{
+  background:linear-gradient(90deg,#2fe08d,#6bffbf);
+  box-shadow:0 0 10px rgba(47,224,141,.35);
+}
+
+.airon-ghost__pill{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:800;
+  border:1px solid rgba(47,224,141,.35);
+  color:#2fe08d;
+}
+
+.airon-ghost__hint{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:8px;
+  font-size:11.5px;
+  color:var(--ag-muted);
+}
+
+.airon-ghost__dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#2fe08d;
+  box-shadow:0 0 8px rgba(47,224,141,.4);
+}
+
+.airon-ghost__footer{
+  padding:10px 14px 14px;
+  font-size:11px;
+  color:rgba(255,255,255,.45);
+}
+
+/* === R4 Hard-Lock overrides === */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;}
+
+
+
+
+/* === R5 FIT-TO-GRID OVERRIDES (fills iframe cell exactly) === */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:transparent;}
+.airon-ghost{
+  width:100%;
+  height:100%;
+  max-width:none !important;
+  min-width:0 !important;
+  margin:0 !important;
+}
+.airon-ghost__panel{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+.airon-ghost__list{
+  flex:1 1 auto;
+  min-height:0;
+  overflow:auto; /* scroll inside module, not outside */
+
+  /* STANDARD SCROLL (hidden bar, like KPI Trends) */
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE/Edge Legacy */
+}
+
+/* WebKit (Chrome/Safari/Edge) */
+.airon-ghost__list::-webkit-scrollbar{ width:0; height:0; }
+
+</style>
+
+<section class="airon-ghost" data-airon-component="ghost-events">
+  <div class="airon-ghost__panel">
+    <header class="airon-ghost__header">
+      <div class="airon-ghost__title">GHOST EVENTS</div>
+      <div class="airon-ghost__subtitle">
+        Recent anomalies, misfires, and operator interventions.
+      </div>
+    </header>
+
+    <div class="airon-ghost__list">
+
+      <div class="airon-ghost__card">
+        <div class="airon-ghost__cardTop">
+          <div>
+            <div class="airon-ghost__cardTitle">Starved/Blocked Events</div>
+            <div class="airon-ghost__cardDesc">Top downtime bucket</div>
+          </div>
+          <button class="airon-ghost__watch">Watch</button>
+        </div>
+        <div class="airon-ghost__meter">
+          <div class="airon-ghost__track">
+            <div class="airon-ghost__fill" style="--pct:78"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="airon-ghost__card">
+        <div class="airon-ghost__cardTop">
+          <div>
+            <div class="airon-ghost__cardTitle">Changeover Overrun</div>
+            <div class="airon-ghost__cardDesc">Time-to-first-good drift</div>
+          </div>
+          <button class="airon-ghost__watch">Watch</button>
+        </div>
+        <div class="airon-ghost__meter">
+          <div class="airon-ghost__track">
+            <div class="airon-ghost__fill" style="--pct:62"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="airon-ghost__card">
+        <div class="airon-ghost__cardTop">
+          <div>
+            <div class="airon-ghost__cardTitle">QC Hold Risk</div>
+            <div class="airon-ghost__cardDesc">Reject trend</div>
+          </div>
+          <span class="airon-ghost__pill">OK</span>
+        </div>
+        <div class="airon-ghost__hint">
+          <div class="airon-ghost__dot"></div>
+          Stable condition
+        </div>
+      </div>
+
+      <div class="airon-ghost__card">
+        <div class="airon-ghost__cardTop">
+          <div>
+            <div class="airon-ghost__cardTitle">CIP Readiness</div>
+            <div class="airon-ghost__cardDesc">Next window in 3.2h</div>
+          </div>
+          <span class="airon-ghost__pill">Ready</span>
+        </div>
+        <div class="airon-ghost__meter">
+          <div class="airon-ghost__track">
+            <div class="airon-ghost__fill airon-ghost__fill--green" style="--pct:90"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="airon-ghost__footer">
+      Events are severity-weighted and tagged to the current plant / line context.
+    </footer>
+  </div>
+</section>
+
+<script>
+/* ================================
+   A.I.R.O.N. Ghost Events Controller
+   ================================ */
+(function(){
+  const STATE={scope:{mode:"plantwide",line:null}};
+  window.AIRON_GHOST={
+    init(){},
+    setScope(s){STATE.scope=s;},
+    getScope(){return STATE.scope;}
+  };
+})();
+</script>

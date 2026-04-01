@@ -1,0 +1,27 @@
+
+/* ===== VAULT ROUND DOOR & SEQUENCE ===== */
+#vault-door{width:220px;height:220px;border-radius:50%;position:relative;overflow:hidden;
+box-shadow:0 0 30px rgba(255,180,60,.35), inset 0 0 18px rgba(0,0,0,.85);}
+#vault-door .vault-plate{width:100%;height:100%;border-radius:50%;
+background:radial-gradient(circle at center,#1b2a33 0%,#0b1218 55%,#05080c 100%);
+border:6px solid #caa24a;}
+.vault-open #vault-door{animation:vaultOpen 900ms cubic-bezier(.12,.85,.2,1) forwards;}
+@keyframes vaultOpen{to{transform:scale(1.08) rotate(10deg);opacity:0}}
+.vault-box{background:linear-gradient(145deg,#2a4050,#0e1720);
+	border:1px solid rgba(255,200,90,.48);
+	box-shadow:inset 0 0 10px rgba(0,0,0,.78),0 0 14px rgba(255,180,60,.18);
+	text-align:center;}
+.vault-box:hover{box-shadow:0 0 22px rgba(255,200,90,.45)}
+
+/* Increase readability inside drawers */
+.vault-box h3{color:rgba(240,248,255,.96); text-shadow:0 1px 0 rgba(0,0,0,.55);} 
+.vault-box p{color:rgba(210,230,255,.86);} 
+
+
+/* --- V.A.U.L.T. forced two-column drawer layout --- */
+.vault-grid,
+.vault-drawer-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 18px;
+}

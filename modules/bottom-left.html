@@ -1,0 +1,451 @@
+<!-- ===========================
+     AIRON BOTTOM LEFT — I/O WATCH (LEFT-LOCKED / HEIGHT-LOCKED)
+     Fix:
+     - Remove JS that overwrote max-height
+     - Lock frame height
+     - Use flex layout so list scrolls inside the frame
+     Deploy: IO-002
+     =========================== -->
+
+<div id="airon-io" class="airon-io">
+  <div class="airon-io__frame">
+    <div class="airon-io__work" aria-label="A.I.R.O.N. I/O Watch Module">
+
+      <div class="airon-io__hdr">
+        <div class="airon-io__titleWrap">
+          <div class="airon-io__title">I/O WATCH</div>
+          <div class="airon-io__sub">Pin the signals you care about and keep eyes on them during the run.</div>
+        </div>
+        <div class="airon-io__hdrRight">
+          <div class="airon-io__badge" title="Read-only panel">Read-only</div>
+        </div>
+      </div>
+
+      <div class="airon-io__toolbar" role="group" aria-label="I/O Watch actions">
+        <button class="airon-io__btn airon-io__btn--ghost" type="button" data-action="edit">
+          Edit Watch List
+        </button>
+        <button class="airon-io__btn" type="button" data-action="add">
+          Add Watch
+        </button>
+      </div>
+
+      <!-- Scroll area (now truly constrained by the locked frame) -->
+      <div class="airon-io__list" role="list" aria-label="Watched signals">
+        <div class="airon-io__row" role="listitem" tabindex="0" data-type="DI" data-tag="DI_0123">
+          <div class="airon-io__dot airon-io__dot--green" aria-hidden="true"></div>
+          <div class="airon-io__meta">
+            <div class="airon-io__name">
+              DI-0123 — Case Present
+              <span class="airon-io__chip airon-io__chip--di">Digital</span>
+            </div>
+            <div class="airon-io__addr">Rack 2 • Slot 3 • Bit 7</div>
+          </div>
+          <div class="airon-io__val">
+            <div class="airon-io__state airon-io__state--on">ON</div>
+            <div class="airon-io__units">—</div>
+          </div>
+        </div>
+
+        <div class="airon-io__row" role="listitem" tabindex="0" data-type="DI" data-tag="DI_0048">
+          <div class="airon-io__dot airon-io__dot--amber" aria-hidden="true"></div>
+          <div class="airon-io__meta">
+            <div class="airon-io__name">
+              DI-0048 — Guard Door
+              <span class="airon-io__chip airon-io__chip--di">Digital</span>
+            </div>
+            <div class="airon-io__addr">Rack 1 • Slot 5 • Bit 2</div>
+          </div>
+          <div class="airon-io__val">
+            <div class="airon-io__state airon-io__state--off">OFF</div>
+            <div class="airon-io__units">—</div>
+          </div>
+        </div>
+
+        <div class="airon-io__row" role="listitem" tabindex="0" data-type="DO" data-tag="DO_0102">
+          <div class="airon-io__dot airon-io__dot--cyan" aria-hidden="true"></div>
+          <div class="airon-io__meta">
+            <div class="airon-io__name">
+              DO-0102 — Conveyor Run
+              <span class="airon-io__chip airon-io__chip--do">Output</span>
+            </div>
+            <div class="airon-io__addr">Rack 2 • Slot 1 • Bit 0</div>
+          </div>
+          <div class="airon-io__val">
+            <div class="airon-io__state airon-io__state--on">ON</div>
+            <div class="airon-io__units">—</div>
+          </div>
+        </div>
+
+        <div class="airon-io__row" role="listitem" tabindex="0" data-type="AI" data-tag="AI_0201">
+          <div class="airon-io__dot airon-io__dot--purple" aria-hidden="true"></div>
+          <div class="airon-io__meta">
+            <div class="airon-io__name">
+              AI-0201 — Line Air Pressure
+              <span class="airon-io__chip airon-io__chip--ai">Analog</span>
+            </div>
+            <div class="airon-io__addr">Rack 3 • Slot 2 • Ch 1</div>
+          </div>
+          <div class="airon-io__val">
+            <div class="airon-io__num">84.2</div>
+            <div class="airon-io__units">psi</div>
+          </div>
+        </div>
+
+        <div class="airon-io__row" role="listitem" tabindex="0" data-type="AI" data-tag="AI_0310">
+          <div class="airon-io__dot airon-io__dot--pink" aria-hidden="true"></div>
+          <div class="airon-io__meta">
+            <div class="airon-io__name">
+              AI-0310 — Fill Temp
+              <span class="airon-io__chip airon-io__chip--ai">Analog</span>
+            </div>
+            <div class="airon-io__addr">Rack 4 • Slot 1 • Ch 0</div>
+          </div>
+          <div class="airon-io__val">
+            <div class="airon-io__num">71.6</div>
+            <div class="airon-io__units">°F</div>
+          </div>
+        </div>
+
+        <div class="airon-io__row" role="listitem" tabindex="0" data-type="AI" data-tag="AI_0407">
+          <div class="airon-io__dot airon-io__dot--gold" aria-hidden="true"></div>
+          <div class="airon-io__meta">
+            <div class="airon-io__name">
+              AI-0407 — VFD Load
+              <span class="airon-io__chip airon-io__chip--ai">Analog</span>
+            </div>
+            <div class="airon-io__addr">Drive 1 • Telemetry</div>
+          </div>
+          <div class="airon-io__val">
+            <div class="airon-io__num">38</div>
+            <div class="airon-io__units">%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="airon-io__foot">
+        <div class="airon-io__hint">Tip: tap a row to focus it (future: opens selection board / step shortcut).</div>
+        <div class="airon-io__deploy" aria-hidden="true">IO-002</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+#airon-io, #airon-io * { box-sizing: border-box; }
+
+#airon-io.airon-io{
+  --bg1: rgba(8,12,22,.92);
+  --bg2: rgba(4,6,10,.92);
+  --gold: #f2c34b;
+  --text: rgba(235,245,255,.96);
+  --sub: rgba(200,215,255,.78);
+  --radius: 18px;
+
+  /* LEFT COLUMN lock */
+  --frameMax: 420px;
+
+  /* HARD HEIGHT LOCK (adjust here if needed) */
+  --frameH: 520px;
+
+  width: 100%;
+  margin: 0;
+  padding: 8px 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  color: var(--text);
+}
+
+#airon-io .airon-io__frame{
+  width: 100%;
+  max-width: var(--frameMax);
+  height: var(--frameH);          /* <- LOCKED */
+  margin: 0;
+  margin-right: auto;
+  border-radius: calc(var(--radius) + 10px);
+  border: 1px solid rgba(120,170,255,.16);
+  background:
+    radial-gradient(1100px 420px at 45% -10%, rgba(90,210,255,.10), transparent 55%),
+    radial-gradient(900px 380px at 18% 40%, rgba(120,150,255,.10), transparent 60%),
+    radial-gradient(900px 380px at 82% 45%, rgba(242,195,75,.09), transparent 60%),
+    linear-gradient(180deg, var(--bg1), var(--bg2));
+  box-shadow:
+    0 0 0 1px rgba(242,195,75,.06) inset,
+    0 14px 44px rgba(0,0,0,.55),
+    0 0 28px rgba(90,210,255,.08);
+  overflow: hidden;
+  position: relative;
+}
+
+#airon-io .airon-io__work{
+  /* fill the locked frame minus the visual margin */
+  position: absolute;
+  inset: 16px 18px;
+  border-radius: calc(var(--radius) + 6px);
+  border: 1px solid rgba(120,170,255,.12);
+  background:
+    radial-gradient(900px 340px at 15% 35%, rgba(120,150,255,.09), transparent 60%),
+    radial-gradient(900px 340px at 85% 45%, rgba(242,195,75,.08), transparent 60%);
+  box-shadow:
+    0 0 0 1px rgba(242,195,75,.05) inset,
+    0 0 18px rgba(90,210,255,.06);
+  overflow: hidden;
+  padding: 16px 14px 14px;
+
+  /* key: flex column so list becomes the scroll region */
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.airon-io__hdr{
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.airon-io__title{
+  font-weight: 900;
+  letter-spacing: .10em;
+  font-size: 14px;
+  color: #fff;
+  text-transform: uppercase;
+}
+.airon-io__sub{
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.25;
+  color: var(--sub);
+  max-width: 300px;
+}
+.airon-io__badge{
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(242,195,75,.18);
+  background: rgba(0,0,0,.16);
+  color: rgba(255,240,205,.92);
+  box-shadow: 0 0 0 1px rgba(242,195,75,.06) inset, 0 0 18px rgba(242,195,75,.06);
+  white-space: nowrap;
+}
+
+.airon-io__toolbar{
+  display: flex;
+  gap: 10px;
+  margin: 10px 0 12px;
+}
+.airon-io__btn{
+  appearance: none;
+  border: 1px solid rgba(242,195,75,.22);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(242,195,75,.12), transparent 55%),
+    linear-gradient(180deg, rgba(18,25,44,.75), rgba(8,10,18,.72));
+  color: #fff;
+  font-weight: 800;
+  font-size: 12px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(242,195,75,.06) inset, 0 10px 24px rgba(0,0,0,.40), 0 0 16px rgba(90,210,255,.05);
+}
+.airon-io__btn--ghost{
+  border-color: rgba(120,170,255,.18);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(90,210,255,.10), transparent 55%),
+    linear-gradient(180deg, rgba(18,25,44,.68), rgba(8,10,18,.68));
+}
+.airon-io__btn:hover{ transform: translateY(-1px); }
+.airon-io__btn:active{ transform: translateY(0px); }
+
+/* THIS is now the only scroll region */
+.airon-io__list{
+  border: 1px solid rgba(120,170,255,.10);
+  background: rgba(0,0,0,.14);
+  border-radius: 16px;
+  padding: 10px;
+  overflow: auto;
+  box-shadow: 0 0 0 1px rgba(242,195,75,.04) inset;
+
+  /* critical: allow flex child to shrink and scroll */
+  flex: 1;
+  min-height: 0;
+
+
+
+.airon-io__list::-webkit-scrollbar{
+  width: 0;
+  height: 0;
+}
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.airon-io__row{
+  display: grid;
+  grid-template-columns: 14px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(242,195,75,.10);
+  background:
+    radial-gradient(circle at 18% 20%, rgba(90,210,255,.06), transparent 55%),
+    linear-gradient(180deg, rgba(18,25,44,.58), rgba(8,10,18,.56));
+  box-shadow: 0 0 0 1px rgba(0,0,0,.20) inset, 0 10px 18px rgba(0,0,0,.28);
+  outline: none;
+}
+.airon-io__row + .airon-io__row{ margin-top: 10px; }
+.airon-io__row:focus, .airon-io__row:hover{
+  border-color: rgba(242,195,75,.26);
+  box-shadow: 0 0 0 1px rgba(242,195,75,.08) inset, 0 14px 22px rgba(0,0,0,.34), 0 0 22px rgba(90,210,255,.06);
+}
+
+.airon-io__dot{ width: 10px; height: 10px; border-radius: 999px; box-shadow: 0 0 16px currentColor; }
+.airon-io__dot--green{ color: rgba(110,255,190,.95); background: currentColor; }
+.airon-io__dot--amber{ color: rgba(255,210,120,.92); background: currentColor; }
+.airon-io__dot--cyan{ color: rgba(90,210,255,.95); background: currentColor; }
+.airon-io__dot--purple{ color: rgba(185,140,255,.92); background: currentColor; }
+.airon-io__dot--pink{ color: rgba(255,150,210,.90); background: currentColor; }
+.airon-io__dot--gold{ color: rgba(242,195,75,.95); background: currentColor; }
+
+.airon-io__name{ font-weight: 900; color: #fff; font-size: 12.5px; line-height: 1.1; }
+.airon-io__addr{ margin-top: 6px; font-size: 11px; color: rgba(255,255,255,.72); }
+.airon-io__chip{
+  display: inline-block; margin-left: 8px; font-size: 10px; padding: 3px 8px;
+  border-radius: 999px; border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.14); color: rgba(255,255,255,.88);
+  font-weight: 900;
+}
+.airon-io__chip--di{ border-color: rgba(110,255,190,.22); }
+.airon-io__chip--do{ border-color: rgba(90,210,255,.22); }
+.airon-io__chip--ai{ border-color: rgba(185,140,255,.22); }
+
+.airon-io__val{ text-align: right; min-width: 70px; }
+.airon-io__state{
+  font-weight: 950; font-size: 12px; padding: 6px 10px; border-radius: 999px;
+  display: inline-block; border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.16); color: #fff;
+}
+.airon-io__state--on{ border-color: rgba(110,255,190,.22); box-shadow: 0 0 18px rgba(110,255,190,.10); }
+.airon-io__state--off{ border-color: rgba(255,210,120,.20); box-shadow: 0 0 18px rgba(255,210,120,.08); opacity: .92; }
+.airon-io__num{ font-weight: 950; font-size: 18px; color: #fff; }
+.airon-io__units{ margin-top: 4px; font-size: 11px; color: rgba(255,255,255,.70); }
+
+.airon-io__foot{
+  display: flex; justify-content: space-between; gap: 12px;
+  margin-top: 12px; padding-top: 10px;
+  border-top: 1px solid rgba(120,170,255,.10);
+}
+.airon-io__hint{ font-size: 11px; color: rgba(255,255,255,.68); line-height: 1.25; }
+.airon-io__deploy{
+  font-size: 11px; font-weight: 900; letter-spacing: .14em;
+  color: rgba(255,240,205,.85);
+  padding: 6px 10px; border-radius: 999px;
+  border: 1px solid rgba(242,195,75,.16);
+  background: rgba(0,0,0,.12);
+}
+
+/* Mobile safety */
+@media (max-width: 640px){
+  #airon-io.airon-io{ --frameMax: 100%; --frameH: 520px; }
+  #airon-io .airon-io__work{ inset: 12px 12px; }
+}
+
+/* === R4 Hard-Lock overrides === */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;}
+
+
+
+
+/* === R5 FIT-TO-GRID OVERRIDES (fills iframe cell exactly) === */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:transparent;}
+#airon-io, .airon-io{
+  width:100% !important;
+  height:100% !important;
+  margin:0 !important;
+}
+.airon-io__frame{
+  width:100% !important;
+  height:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+}
+.airon-io__work{
+  width:100% !important;
+  height:100% !important;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+.airon-io__list, .airon-io__body, .airon-io__grid{
+  flex:1 1 auto;
+  min-height:0;
+  overflow:auto;
+}
+
+</style>
+
+<script>
+(() => {
+  "use strict";
+  const root = document.getElementById("airon-io");
+  if (!root) return;
+
+  const rows = Array.from(root.querySelectorAll(".airon-io__row"));
+  const btnAdd = root.querySelector('[data-action="add"]');
+  const btnEdit = root.querySelector('[data-action="edit"]');
+
+  function toast(msg){
+    let t = root.querySelector(".airon-io__toast");
+    if (!t){
+      t = document.createElement("div");
+      t.className = "airon-io__toast";
+      t.setAttribute("role","status");
+      t.style.position = "absolute";
+      t.style.left = "18px";
+      t.style.right = "18px";
+      t.style.bottom = "14px";
+      t.style.padding = "10px 12px";
+      t.style.borderRadius = "14px";
+      t.style.border = "1px solid rgba(242,195,75,.20)";
+      t.style.background = "rgba(0,0,0,.55)";
+      t.style.color = "rgba(255,255,255,.95)";
+      t.style.fontWeight = "800";
+      t.style.fontSize = "12px";
+      t.style.boxShadow = "0 14px 28px rgba(0,0,0,.45)";
+      t.style.backdropFilter = "blur(8px)";
+      t.style.transform = "translateY(12px)";
+      t.style.opacity = "0";
+      t.style.transition = "opacity 160ms ease, transform 160ms ease";
+      root.querySelector(".airon-io__work").appendChild(t);
+    }
+    t.textContent = msg;
+    requestAnimationFrame(() => {
+      t.style.opacity = "1";
+      t.style.transform = "translateY(0)";
+    });
+    clearTimeout(t._hide);
+    t._hide = setTimeout(() => {
+      t.style.opacity = "0";
+      t.style.transform = "translateY(12px)";
+    }, 1400);
+  }
+
+  rows.forEach(r => {
+    r.addEventListener("click", () => {
+      rows.forEach(x => x.removeAttribute("data-selected"));
+      r.setAttribute("data-selected","true");
+      toast("Focused. (Future: opens selection board / step shortcut.)");
+    });
+    r.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        r.click();
+      }
+    });
+  });
+
+  if (btnAdd) btnAdd.addEventListener("click", () => toast("Add Watch (future flyout board)."));
+  if (btnEdit) btnEdit.addEventListener("click", () => toast("Edit Watch List (future flyout board)."));
+})();
+</script>

@@ -1,0 +1,13 @@
+  <script>
+    (function(){
+      try{
+        var h = (window.location.hostname || '').toLowerCase();
+        if(h === 'catastrophe.dingfelder.co'){
+          var p = window.location.pathname || '/';
+          if(p.indexOf('/catastrophe') !== 0){
+            window.location.replace('/catastrophe/');
+          }
+        }
+      }catch(e){}
+    })();
+  </script>

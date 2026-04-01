@@ -1,0 +1,1292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- BUILD: 20260116-01 -->
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <script>
+    (function(){
+      try{
+        var h = (window.location.hostname || '').toLowerCase();
+        if(h === 'catastrophe.dingfelder.co'){
+          var p = window.location.pathname || '/';
+          if(p.indexOf('/catastrophe') !== 0){
+            window.location.replace('/catastrophe/');
+          }
+        }
+      }catch(e){}
+    })();
+  </script>
+  <title>A.I.R.O.N. Industry Demo</title>
+  <style>
+    :root{
+      --shellPad: 18px;
+      --gap: 18px;
+
+      /* MASTER STANDARD: CAT column + row heights */
+      --catW: 560px;
+      --catH: 440px;
+
+      /* Center column can be tuned without breaking rules */
+      --colC: var(--catW);
+
+      /* Debug gridlines */
+      --gridOn: 1;                 /* 1=on, 0=off */
+      --gridColor: #FFD400;
+      --gridW: 2px;
+      --gridGlow: 0 0 18px rgba(255,212,0,.35);
+
+      --bg0:#07090f;
+      --bg1:#0b1020;
+      --panel: rgba(10,14,26,.72);
+      --panel2: rgba(6,8,14,.64);
+      --stroke: rgba(255,255,255,.08);
+      --stroke2: rgba(255,255,255,.05);
+      --txt: rgba(235,242,255,.92);
+      --muted: rgba(150,170,200,.78);
+      --accent: rgba(90,210,255,.95);
+      --gold: rgba(242,195,75,.95);
+    }
+
+    html,body{height:100%; margin:0; background: radial-gradient(1200px 600px at 50% 0%, rgba(90,210,255,.10), transparent 60%),
+      radial-gradient(900px 500px at 15% 35%, rgba(242,195,75,.10), transparent 60%),
+      linear-gradient(180deg, var(--bg0), var(--bg1)); color:var(--txt); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;}
+
+    /* ======= Header ======= */
+    .shell{
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: var(--shellPad);
+    }
+
+    .header{
+      height: 78px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(10,14,26,.78), rgba(6,8,14,.72));
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 12px 50px rgba(0,0,0,.55);
+      display:flex;
+      align-items:center;
+      gap: 18px;
+      padding: 0 18px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .brand{
+      display:flex; flex-direction:column; gap:2px;
+      min-width: 165px;
+    }
+    .brand .title{font-weight:800; letter-spacing:.8px; font-size: 15px;}
+    .brand .sub{font-size:12px; color: var(--muted); letter-spacing:.2px;}
+
+    .how{
+      margin-left: 6px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(90,210,255,.25);
+      color: rgba(200,235,255,.95);
+      background: rgba(90,210,255,.08);
+      font-weight:700;
+      font-size:12px;
+      cursor:pointer;
+      user-select:none;
+      white-space:nowrap;
+    }
+
+    .pills{
+      display:flex; align-items:center; gap:10px; flex:1;
+      justify-content:center;
+      min-width: 420px;
+    }
+
+    /* Header strip removed — Industry Select lives in A.I.R.O.N. Selector System */
+    .pills{ display:none !important; }
+
+    /* ===== Industry Select Overlay ===== */
+    .industryOverlay{
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      background: rgba(0,0,0,.55);
+      z-index: 9999;
+      backdrop-filter: blur(8px);
+    }
+    .industryOverlay.on{ display:grid; }
+    .industryPanel{
+      width: min(680px, calc(100vw - 36px));
+      border-radius: 18px;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(10,14,26,.92), rgba(6,8,14,.90));
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 22px 80px rgba(0,0,0,.70);
+    }
+    .industryPanel h3{
+      margin: 0 0 10px 0;
+      font-size: 14px;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      color: rgba(255,244,210,.95);
+    }
+    .industryGrid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .industryBtn{
+      border-radius: 14px;
+      padding: 14px 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      color: rgba(235,242,255,.92);
+      font-weight: 800;
+      letter-spacing: .2px;
+      cursor: pointer;
+      text-align:left;
+      position:relative;
+    }
+    .industryBtn:before{
+      content:"";
+      width: 10px; height: 10px;
+      border-radius: 999px;
+      background: rgba(242,195,75,.72);
+      box-shadow: 0 0 18px rgba(242,195,75,.20);
+      position:absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    }
+    .industryBtn span{ padding-left: 16px; display:inline-block; }
+    .industryBtn.active{
+      border-color: rgba(242,195,75,.45);
+      background: rgba(242,195,75,.12);
+      color: rgba(255,244,210,.98);
+      box-shadow: 0 0 22px rgba(242,195,75,.12);
+    }
+    .industryActions{
+      display:flex;
+      justify-content:flex-end;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .industryClose{
+      border-radius: 999px;
+      padding: 10px 14px;
+      border: 1px solid rgba(90,210,255,.22);
+      color: rgba(200,235,255,.95);
+      background: rgba(90,210,255,.08);
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .pill{
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      color: rgba(215,230,255,.88);
+      background: rgba(255,255,255,.03);
+      font-weight:750;
+      font-size:12px;
+      cursor:pointer;
+      user-select:none;
+      white-space:nowrap;
+      position:relative;
+    }
+    .pill:before{
+      content:"";
+      width:8px; height:8px;
+      border-radius:999px;
+      background: rgba(242,195,75,.65);
+      box-shadow: 0 0 18px rgba(242,195,75,.22);
+      position:absolute; left:10px; top:50%; transform:translateY(-50%);
+      opacity:.55;
+    }
+    .pill span{ padding-left: 10px; display:inline-block; }
+    .pill.active{
+      border-color: rgba(242,195,75,.45);
+      background: rgba(242,195,75,.12);
+      color: rgba(255,244,210,.98);
+      box-shadow: 0 0 22px rgba(242,195,75,.12);
+    }
+    .pill.active:before{ opacity:1; }
+
+    .hint{
+      color: rgba(150,170,200,.82);
+      font-size: 12px;
+      letter-spacing:.2px;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      /* Give the tagline the full header runway (no truncation by max-width) */
+      flex: 1;
+      max-width: none;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .hintLine{
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+        .tagline{
+      position: relative;
+      font-size: 34px;
+      font-weight: 950;
+      letter-spacing: .8px;
+      line-height: 1.12;
+
+      /* single line, never clip/ellipsis — we auto-fit via JS instead */
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: clip;
+      display: inline-block;
+
+      /* High-impact gold w/ animated shimmer */
+      color: transparent;
+      background: linear-gradient(90deg,
+        rgba(255, 245, 205, .95) 0%,
+        rgba(255, 226, 122, .95) 18%,
+        rgba(242,195,75,.98) 45%,
+        rgba(255, 226, 122, .95) 70%,
+        rgba(255, 245, 205, .95) 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      background-size: 220% 100%;
+      animation: taglineShimmer 6.5s linear infinite;
+
+      /* Depth + presence (reads on dark header) */
+      text-shadow:
+        0 0 24px rgba(242,195,75,.22),
+        0 0 60px rgba(242,195,75,.10),
+        0 10px 26px rgba(0,0,0,.55);
+    }
+
+    .tagline::after{
+      content:"";
+      position:absolute;
+      left: 2%;
+      right: 2%;
+      bottom: -10px;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg,
+        rgba(242,195,75,0) 0%,
+        rgba(242,195,75,.55) 20%,
+        rgba(255,244,210,.75) 50%,
+        rgba(242,195,75,.55) 80%,
+        rgba(242,195,75,0) 100%
+      );
+      box-shadow: 0 0 22px rgba(242,195,75,.18);
+      opacity: .95;
+      pointer-events:none;
+    }
+
+    @keyframes taglineShimmer{
+      0%{ background-position: 0% 50%; }
+      100%{ background-position: 100% 50%; }
+    }
+
+    /* ======= Dashboard Absolute Grid ======= */
+    .dashWrap{
+      margin-top: 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(10,14,26,.55), rgba(6,8,14,.45));
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 18px 70px rgba(0,0,0,.65);
+      padding: 18px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .dashboard{
+      position: relative;
+      width: 100%;
+      height: calc(var(--catH) * 2 + var(--gap));
+    }
+
+    /* computed side widths = remaining space split into two columns with gap accounted */
+    .cell{
+      position:absolute;
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(0,0,0,.0);
+      /* gridlines */
+      outline: calc(var(--gridOn) * var(--gridW)) solid var(--gridColor);
+      outline-offset: -1px;
+      box-shadow: calc(var(--gridOn) * 1px) 0 0 0 rgba(0,0,0,0), calc(var(--gridOn) * 1px) 0 0 0 rgba(0,0,0,0);
+    }
+    .cell.gridGlow{
+      box-shadow: 0 0 0 1px rgba(255,212,0,.25) inset, var(--gridGlow);
+    }
+
+    /* left/right widths computed with CSS calc */
+    .cell.top.left{
+      top:0; left:0;
+      width: calc((100% - var(--colC) - (var(--gap) * 2)) / 2);
+      height: var(--catH);
+    }
+    .cell.top.center{
+      top:0;
+      left: calc((100% - var(--colC)) / 2);
+      width: var(--colC);
+      height: var(--catH);
+    }
+    .cell.top.right{
+      top:0; right:0;
+      width: calc((100% - var(--colC) - (var(--gap) * 2)) / 2);
+      height: var(--catH);
+    }
+
+    .cell.bottom.left{
+      top: calc(var(--catH) + var(--gap)); left:0;
+      width: calc((100% - var(--colC) - (var(--gap) * 2)) / 2);
+      height: var(--catH);
+    }
+    .cell.bottom.center{
+      top: calc(var(--catH) + var(--gap));
+      left: calc((100% - var(--colC)) / 2);
+      width: var(--colC);
+      height: var(--catH);
+    }
+    .cell.bottom.right{
+      top: calc(var(--catH) + var(--gap)); right:0;
+      width: calc((100% - var(--colC) - (var(--gap) * 2)) / 2);
+      height: var(--catH);
+    }
+
+    /* gap is visual; we render it by spacing cells with padding layer */
+    .cell.top.left{ margin-right: var(--gap); }
+    .cell.top.right{ margin-left: var(--gap); }
+    .cell.bottom.left{ margin-right: var(--gap); }
+    .cell.bottom.right{ margin-left: var(--gap); }
+    /* NOTE: margins don't affect absolute positions; kept harmless. */
+
+    .cell iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+      display:block;
+      background: transparent;
+    }
+    .cell iframe{ z-index:1; }
+
+
+    /* Responsive safeguard: if viewport is too narrow, reduce center width but keep rules */
+    @media (max-width: 1180px){
+      :root{ --catW: 520px; --catH: 420px; }
+    }
+    @media (max-width: 1040px){
+      :root{ --catW: 480px; --catH: 400px; }
+      .hint{display:none;}
+    }
+    @media (max-width: 920px){
+      /* stacked fallback – still locked, just one column */
+      .dashboard{ height: calc(var(--catH) * 6 + (var(--gap) * 5)); }
+      .cell{ position:relative; width:100% !important; left:auto !important; right:auto !important; top:auto !important; margin:0 0 var(--gap) 0; height: var(--catH) !important; }
+    }
+
+    /* optional: toggle gridlines by pressing G */
+  
+
+/* ===== Overlay (Help + Menus) ===== */
+.airon-overlay[hidden]{ display:none !important; }
+.airon-overlay{ position: fixed; inset: 0; z-index: 9999; }
+.airon-overlay__backdrop{ position:absolute; inset:0; background: rgba(0,0,0,.58); }
+.airon-overlay__panel{
+  position:absolute; left:50%; top:50%; transform: translate(-50%,-50%);
+  width: min(880px, calc(100vw - 28px));
+  max-height: min(78vh, 720px);
+  background: rgba(7,11,18,.96);
+  border: 1px solid rgba(255,234,0,.30);
+  border-radius: 18px;
+  box-shadow: 0 22px 80px rgba(0,0,0,.65);
+  overflow:hidden;
+  display:flex; flex-direction:column;
+}
+  .airon-overlay__panel.help-theme{
+    /* Premium "glass" surface: visible gradient + subtle sheen */
+    background-image:
+      linear-gradient(180deg,
+        rgba(255,255,255,.97) 0%,
+        rgba(242,255,248,.94) 42%,
+        rgba(233,252,244,.92) 72%,
+        rgba(210,244,230,.95) 100%),
+      radial-gradient(circle at 18% -10%, rgba(34,197,94,.24) 0%, rgba(34,197,94,0) 58%),
+      linear-gradient(135deg, rgba(255,255,255,.70) 0%, rgba(255,255,255,0) 42%);
+    background-color: rgba(255,255,255,.94);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    backdrop-filter: blur(14px) saturate(160%);
+    color:#0b0f14;
+    border:1px solid rgba(34,197,94,.66);
+    box-shadow:
+      0 30px 90px rgba(0,0,0,.55),
+      0 0 34px rgba(34,197,94,.22),
+      0 0 0 1px rgba(34,197,94,.26) inset;
+  }
+
+  /* Settings uses the same premium glass language as Help, but with BLUE accents */
+  .airon-overlay__panel.settings-theme{
+    background-image:
+      linear-gradient(180deg,
+        rgba(255,255,255,.97) 0%,
+        rgba(244,250,255,.94) 42%,
+        rgba(232,246,255,.92) 72%,
+        rgba(216,238,255,.95) 100%),
+      radial-gradient(circle at 18% -10%, rgba(90,210,255,.26) 0%, rgba(90,210,255,0) 58%),
+      linear-gradient(135deg, rgba(255,255,255,.70) 0%, rgba(255,255,255,0) 42%);
+    background-color: rgba(255,255,255,.94);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    backdrop-filter: blur(14px) saturate(160%);
+    color:#0b0f14;
+    border:1px solid rgba(90,210,255,.70);
+    box-shadow:
+      0 30px 90px rgba(0,0,0,.55),
+      0 0 34px rgba(90,210,255,.22),
+      0 0 0 1px rgba(90,210,255,.28) inset;
+  }
+  .airon-overlay__panel.settings-theme::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:url("assets/noise.png");
+    background-size:260px 260px;
+    opacity:.018;
+    mix-blend-mode:multiply;
+    pointer-events:none;
+    border-radius:inherit;
+  }
+  .airon-overlay__panel.settings-theme .airon-overlay__header{
+    background: linear-gradient(180deg, rgba(255,255,255,.92) 0%, rgba(246,252,255,.84) 100%);
+  }
+  .airon-overlay__panel.settings-theme .airon-overlay__footer{
+    background: linear-gradient(0deg, rgba(232,246,255,.82) 0%, rgba(255,255,255,.70) 100%);
+  }
+  .airon-overlay__panel.settings-theme .airon-overlay__title{ color:#0b0f14; text-shadow:none; }
+  .airon-overlay__panel.settings-theme .airon-overlay__body{ color:#0b0f14; }
+  .airon-overlay__panel.settings-theme .airon-overlay__close{ border-color:rgba(90,210,255,.60); color:#0b0f14; background:rgba(90,210,255,.14);} 
+  .airon-overlay__panel.settings-theme .airon-btn{
+    background:rgba(90,210,255,.92);
+    border-color:rgba(0,0,0,.12);
+    color:#0b0f14;
+  }
+  .airon-overlay__panel.settings-theme .airon-btn.secondary{
+    background:rgba(255,255,255,.9);
+    border-color:rgba(90,210,255,.60);
+    color:#0b0f14;
+  }
+  .airon-overlay__panel.settings-theme .airon-pill{
+    background:rgba(90,210,255,.14);
+    border-color:rgba(90,210,255,.60);
+    color:#0b0f14;
+  }
+  .airon-overlay__panel.settings-theme .airon-overlay__header,
+  .airon-overlay__panel.settings-theme .airon-overlay__footer{
+    border-color: rgba(0,0,0,.08);
+    background-image:
+      linear-gradient(180deg,
+        rgba(255,255,255,.88) 0%,
+        rgba(232,246,255,.90) 100%);
+  }
+  /* Subtle glass grain (1–2%): adds depth without looking "textured" */
+  .airon-overlay__panel.help-theme::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:url("assets/noise.png");
+    background-size:260px 260px;
+    opacity:.018;
+    mix-blend-mode:multiply;
+    pointer-events:none;
+    border-radius:inherit;
+  }
+
+
+  /* Give the header/footer a slightly "frosted" cap so the surface reads as glass */
+  .airon-overlay__panel.help-theme .airon-overlay__header{
+    background: linear-gradient(180deg, rgba(255,255,255,.92) 0%, rgba(245,250,247,.84) 100%);
+  }
+  .airon-overlay__panel.help-theme .airon-overlay__footer{
+    background: linear-gradient(0deg, rgba(231,248,240,.80) 0%, rgba(255,255,255,.70) 100%);
+  }
+  .airon-overlay__panel.help-theme .airon-overlay__title{ color:#0b0f14; text-shadow:none; }
+  .airon-overlay__panel.help-theme .airon-overlay__body{ color:#0b0f14; }
+  .airon-overlay__panel.help-theme .airon-overlay__close{ border-color:rgba(34,197,94,.55); color:#0b0f14; background:rgba(34,197,94,.12);} 
+  .airon-overlay__panel.help-theme .airon-btn{
+    background:rgba(34,197,94,.92);
+    border-color:rgba(0,0,0,.12);
+    color:#0b0f14;
+  }
+  .airon-overlay__panel.help-theme .airon-btn.secondary{
+    background:rgba(255,255,255,.9);
+    border-color:rgba(34,197,94,.55);
+    color:#0b0f14;
+  }
+  .airon-overlay__panel.help-theme .airon-pill{
+    background:rgba(34,197,94,.14);
+    border-color:rgba(34,197,94,.55);
+    color:#0b0f14;
+  }
+  .airon-overlay__panel.help-theme .airon-overlay__header,
+  .airon-overlay__panel.help-theme .airon-overlay__footer{
+    border-color: rgba(0,0,0,.08);
+    background-image:
+      linear-gradient(180deg,
+        rgba(255,255,255,.88) 0%,
+        rgba(233,252,244,.90) 100%);
+  }
+.airon-overlay__header{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,.10);
+}
+.airon-overlay__title{ font-weight: 900; letter-spacing:.6px; color:#0b0f14; }
+.airon-overlay__close{
+  width:36px; height:36px; border-radius:12px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(0,180,90,.12);
+  color:#0b0f14; cursor:pointer;
+}
+.airon-overlay__close:hover{ border-color: rgba(255,234,0,.45); }
+.airon-overlay__body{ padding:14px; overflow:auto; min-height:0; }
+.airon-overlay__footer{
+  padding: 12px 14px; border-top: 1px solid rgba(255,255,255,.10);
+  display:flex; gap:10px; justify-content:flex-end;
+}
+.airon-pill{
+  display:inline-flex; align-items:center; gap:8px;
+  border: 1px solid rgba(255,234,0,.28);
+  color:#0b0f14; background: rgba(0,0,0,.30);
+  border-radius: 999px; padding: 8px 12px;
+  font-weight: 800; letter-spacing:.4px;
+}
+.airon-helpgrid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 18px;
+  margin-top: 12px;
+}
+.airon-overlay__body h4{
+  margin: 10px 0 8px;
+  font-size: 13px;
+  letter-spacing: .45px;
+  text-transform: uppercase;
+  color: #0b0f14;
+}
+.airon-overlay__body ul, .airon-overlay__body ol{
+  margin: 8px 0 0 18px;
+}
+.airon-overlay__body li{ margin: 6px 0; line-height: 1.35; }
+@media (max-width: 720px){
+  .tagline{ font-size: 34px; }
+  .airon-helpgrid{ grid-template-columns: 1fr; }
+}
+.airon-btn{
+  border-radius: 999px;
+  border: 1px solid rgba(0,180,90,.55);
+  background: rgba(0,180,90,.12);
+  color:#0b0f14;
+  padding: 10px 14px;
+  font-weight: 900;
+  letter-spacing: .5px;
+  cursor:pointer;
+}
+.airon-btn:hover{ border-color: rgba(0,180,90,.85); background: rgba(0,180,90,.18); }
+
+/* Standard hidden-scroll method */
+.standard-scroll{ scrollbar-width:none; -ms-overflow-style:none; }
+.standard-scroll::-webkit-scrollbar{ width:0; height:0; }
+
+/* ===== Help hit targets (captures clicks while Help mode is ON) ===== */
+.helpHit{
+  position:absolute;
+  inset:0;
+  display:none;
+  border-radius: 18px;
+  background: rgba(255,234,0,.06);
+  border: 1px dashed rgba(255,234,0,.22);
+  box-shadow: 0 0 22px rgba(255,234,0,.10);
+  cursor: help;
+  z-index: 25; /* above iframe */
+}
+body.helpMode .helpHit{ display:block; }
+body.helpMode .cell{ box-shadow: 0 0 0 1px rgba(255,234,0,.10) inset; }
+
+/* Help intro overlay should allow click-through to module hit targets */
+body.helpMode #aironOverlay{ pointer-events:none; }
+body.helpMode #aironOverlay .airon-overlay__panel{ pointer-events:auto; }
+body.helpMode #aironOverlay .airon-overlay__backdrop{ pointer-events:none; }
+
+</style>
+</head>
+<body>
+  <div class="shell">
+    <div class="header">
+      <div class="brand">
+        <div class="title">A.I.R.O.N.™</div>
+        <div class="sub">Industry Select</div>
+      </div>
+
+      <div class="hint">
+        <div class="tagline">Forging tomorrow's efficiency with every minute of today's operation...</div>
+      </div>
+    </div>
+
+    <!-- Industry Select Overlay (opened from A.I.R.O.N. Selector System) -->
+    <div class="industryOverlay" id="industryOverlay" aria-hidden="true">
+      <div class="industryPanel" role="dialog" aria-modal="true" aria-label="Industry Select">
+        <h3>Industry Select</h3>
+        <div class="industryGrid" id="industryGrid"></div>
+        <div class="industryActions">
+          <button class="industryClose" id="industryClose" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashWrap">
+      <div class="dashboard" id="dash">
+
+        <div class="cell gridGlow top left" id="cellTL">
+          <iframe src="modules/top-left.html?v=20260110-01" title="Ghost Events" loading="eager"></iframe>
+        <button class="helpHit" type="button" data-help="top-left" aria-label="Help: top-left"></button>
+        </div>
+
+        <div class="cell gridGlow top center" id="cellTC">
+          <iframe src="modules/top-center.html?v=20260110-07" title="Hub" loading="eager"></iframe>
+        <button class="helpHit" type="button" data-help="top-center" aria-label="Help: top-center"></button>
+        </div>
+
+        <div class="cell gridGlow top right" id="cellTR">
+          <iframe src="modules/top-right.html?v=20260110-01" title="KPI Trends" loading="eager"></iframe>
+        <button class="helpHit" type="button" data-help="top-right" aria-label="Help: top-right"></button>
+        </div>
+
+        <div class="cell gridGlow bottom left" id="cellBL">
+          <iframe src="modules/bottom-left.html?v=20260110-01" title="I/O Watch" loading="eager"></iframe>
+        <button class="helpHit" type="button" data-help="bottom-left" aria-label="Help: bottom-left"></button>
+        </div>
+
+        <div class="cell gridGlow bottom center" id="cellBC">
+          <iframe src="modules/bottom-center.html?v=20260110-01" title="CAT Output Trend" loading="eager"></iframe>
+        <button class="helpHit" type="button" data-help="bottom-center" aria-label="Help: bottom-center"></button>
+        </div>
+
+        <div class="cell gridGlow bottom right" id="cellBR">
+          <iframe src="modules/bottom-right.html?v=20260110-01" title="Fortune Teller" loading="eager"></iframe>
+        <button class="helpHit" type="button" data-help="bottom-right" aria-label="Help: bottom-right"></button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Global overlay (Help + Menus) -->
+  <div id="aironOverlay" class="airon-overlay" hidden>
+    <div class="airon-overlay__backdrop" data-ov-close="1"></div>
+    <div class="airon-overlay__panel" role="dialog" aria-modal="true" aria-label="A.I.R.O.N. Overlay">
+      <div class="airon-overlay__header">
+        <div class="airon-overlay__title" id="aironOverlayTitle">Help</div>
+        <button class="airon-overlay__close" type="button" data-ov-close="1" aria-label="Close">✕</button>
+      </div>
+      <div class="airon-overlay__body standard-scroll" id="aironOverlayBody"></div>
+      <div class="airon-overlay__footer" id="aironOverlayFooter"></div>
+    </div>
+  </div>
+
+  <script>
+    // ===== Industry Select (no header strip) =====
+    const industries = [
+      'Foundry',
+      'Food',
+      'Wastewater',
+      'Ethylene',
+      'Machine Shop',
+      'Propane Strip'
+    ];
+
+    let currentIndustry = 'Food';
+
+    function broadcastIndustry(name){
+      document.querySelectorAll('iframe').forEach(f=>{
+        try { f.contentWindow.postMessage({ type:'AIRON_INDUSTRY_SET', industry:name }, '*'); } catch(e){}
+      });
+    }
+
+    function setIndustry(name){
+      currentIndustry = name;
+      document.querySelector('.brand .sub').textContent = name;
+      // update overlay active state
+      document.querySelectorAll('.industryBtn').forEach(b=>b.classList.toggle('active', b.dataset.industry === name));
+      broadcastIndustry(name);
+    }
+
+    // Build overlay buttons
+    const overlay = document.getElementById('industryOverlay');
+    const grid = document.getElementById('industryGrid');
+    industries.forEach(name => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'industryBtn';
+      btn.dataset.industry = name;
+      btn.innerHTML = `<span>${name}</span>`;
+      btn.addEventListener('click', () => setIndustry(name));
+      grid.appendChild(btn);
+    });
+
+    function openIndustry(){
+      overlay.classList.add('on');
+      overlay.setAttribute('aria-hidden','false');
+      // sync active
+      document.querySelectorAll('.industryBtn').forEach(b=>b.classList.toggle('active', b.dataset.industry === currentIndustry));
+    }
+    function closeIndustry(){
+      overlay.classList.remove('on');
+      overlay.setAttribute('aria-hidden','true');
+    }
+
+    document.getElementById('industryClose').addEventListener('click', closeIndustry);
+    overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeIndustry(); });
+
+    // Also open via the existing How button (temporary convenient access)
+    // (kept because it's useful during testing)
+    // openIndustry(); // (do not auto-open)
+
+    // Listen for the Selector System Industry button
+    window.addEventListener('message', (e)=>{
+      const d = e.data || {};
+      if(d.type === 'AIRON_INDUSTRY_MENU_TOGGLE'){
+        overlay.classList.contains('on') ? closeIndustry() : openIndustry();
+      }
+      if(d.type === 'AIRON_INDUSTRY_SET' && d.industry){
+        setIndustry(String(d.industry));
+      }
+    });
+
+    // Initialize
+    setIndustry(currentIndustry);
+
+    // ===== Tagline: always full, always single-line (auto-fit, no ellipsis) =====
+    function fitTagline(){
+      const el = document.querySelector('.tagline');
+      const wrap = document.querySelector('.header .hint');
+      if(!el || !wrap) return;
+
+      // Reset to the designed size first
+      el.style.fontSize = '';
+
+      // Compute available width (leave a little breathing room)
+      const maxW = Math.max(0, wrap.clientWidth - 12);
+      if(maxW <= 0) return;
+
+      // Shrink only if needed (down to a safe minimum)
+      const minPx = 16;
+      let size = parseFloat(getComputedStyle(el).fontSize) || 30;
+
+      // Guard: if the font is huge due to inheritance, cap the first attempt
+      size = Math.min(size, 42);
+
+      // Reduce until it fits
+      let guard = 0;
+      while(el.scrollWidth > maxW && size > minPx && guard < 60){
+        size -= 0.5;
+        el.style.fontSize = size + 'px';
+        guard++;
+      }
+    }
+
+    let taglineFitTimer = null;
+    window.addEventListener('resize', ()=>{
+      clearTimeout(taglineFitTimer);
+      taglineFitTimer = setTimeout(fitTagline, 80);
+    });
+    // Run once after layout
+    requestAnimationFrame(()=>{ fitTagline(); });
+
+    // Toggle gridlines with G (visual lock aid)
+    document.addEventListener('keydown', (e)=>{
+      if((e.key||'').toLowerCase() === 'g'){
+        const r = getComputedStyle(document.documentElement).getPropertyValue('--gridOn').trim();
+        document.documentElement.style.setProperty('--gridOn', r === '1' ? '0' : '1');
+      }
+    });
+
+    // How this works (optional button)
+    // Some deploys/pages don't include this control. Guard to avoid breaking the whole UI.
+    const howBtn = document.getElementById('howBtn');
+    if (howBtn) {
+      howBtn.addEventListener('click', ()=>{
+        // Keep it simple and safe: no popups yet
+        openIndustry();
+      });
+    }
+  
+
+	  // ===== Global Help + Menus (parent page) =====
+	  // NOTE: this must initialize AFTER the overlay markup exists.
+	  function initAIRONOverlay(){
+	    const overlay = document.getElementById('aironOverlay');
+	    const panelEl = overlay ? overlay.querySelector('.airon-overlay__panel') : null;
+	    const titleEl = document.getElementById('aironOverlayTitle');
+	    const bodyEl  = document.getElementById('aironOverlayBody');
+	    const footEl  = document.getElementById('aironOverlayFooter');
+	    if(!overlay || !titleEl || !bodyEl || !footEl){
+	      console.warn('[A.I.R.O.N.] Overlay elements missing; help/menu wiring skipped.');
+	      return;
+	    }
+
+        // ===== Synchronicity (belt + corner spin) speed control =====
+        // Default: 4 RPM (15s per rotation). Multiplier: 1.0
+        window.AIRON_SYNC_MULT = (typeof window.AIRON_SYNC_MULT === 'number' && isFinite(window.AIRON_SYNC_MULT)) ? window.AIRON_SYNC_MULT : 1;
+
+        function applySyncSpeed(mult){
+          const m = parseFloat(mult);
+          if(!isFinite(m) || m <= 0) return;
+          window.AIRON_SYNC_MULT = m;
+
+          // Target the top-center module iframe
+          const tcFrame = document.querySelector('#cellTC iframe');
+          if(!tcFrame) return;
+
+          // 1) PostMessage (works even if sandboxed later)
+          try { tcFrame.contentWindow && tcFrame.contentWindow.postMessage({ type:'AIRONSYNC_SPEED', mult:m }, '*'); } catch(_){ }
+
+          // 2) If same-origin, set CSS variable directly for instant response
+          try {
+            const doc = tcFrame.contentDocument;
+            const host = doc && (doc.getElementById('airon-selector') || doc.documentElement);
+            if(host) host.style.setProperty('--syncDur', (15 / m).toFixed(3) + 's');
+          } catch(_){ }
+        }
+    // ===== Help content (expanded) =====
+const helpMap = {
+  "top-left": {
+    title: "Ghost Events",
+    html: `
+      <p class="airon-pill">Recent anomalies, misfires, and operator interventions.</p>
+
+      <div class="airon-helpgrid">
+        <div>
+          <h4>What this panel is</h4>
+          <ul>
+            <li><b>Purpose:</b> surface early warnings that can affect <b>uptime</b>, <b>quality</b>, <b>flow</b>, or <b>safety</b>.</li>
+            <li><b>Behavior:</b> read-only. It never issues control actions.</li>
+            <li><b>Signal sources:</b> PLC counters/timers, historian tags, operator logs, and edge anomaly rules.</li>
+            <li><b>Severity:</b> cards are weighted so the “loudest whisper” rises to the top.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>How to use it (standard work)</h4>
+          <ol>
+            <li><b>Confirm</b> the signal (floor check / historian trend / I/O Watch).</li>
+            <li><b>Classify</b>: starved/blocked, changeover drift, QC hold risk, CIP readiness, etc.</li>
+            <li><b>Respond</b> with the existing playbook (no new procedure required).</li>
+            <li><b>Tag</b> the outcome (cleared, escalated, repeat) to improve future ranking.</li>
+          </ol>
+        </div>
+      </div>
+
+      <h4 style="margin-top:14px;">Example scenarios</h4>
+      <ul>
+        <li><b>Starved / Blocked:</b> filler is waiting. Upstream conveyor photo-eye is toggling but product count stays flat → check jam / infeed gate / accumulation.</li>
+        <li><b>Changeover Overrun:</b> line reports “running” but first-good timer exceeds target → verify recipe selection, capper torque head, labeler registration.</li>
+        <li><b>QC Hold Risk:</b> reject rate rises while speed is stable → confirm vision system lighting, verify a drifting sensor, pull last 10 rejects for pattern.</li>
+        <li><b>CIP Readiness:</b> next CIP window approaches but tank level is low → coordinate staging, avoid starting a run that will be interrupted.</li>
+      </ul>
+
+      <p style="opacity:.85; margin-top:10px;">
+        <b>Tip:</b> Treat Ghost Events as a <i>heads-up</i> layer. You still validate with plant reality before you act.
+      </p>
+    `
+  },
+
+  "top-center": {
+    title: "A.I.R.O.N. Selector System",
+    html: `
+      <p class="airon-pill">Navigation hub — orbit is mathematically spaced.</p>
+
+      <div class="airon-helpgrid">
+        <div>
+          <h4>Why it exists</h4>
+          <ul>
+            <li><b>One screen, many industries:</b> swap KPI packs without rebuilding the grid.</li>
+            <li><b>Scales cleanly:</b> add buttons without recalculating angles or breaking layout.</li>
+            <li><b>Consistent entry points:</b> the same “hub” behavior regardless of plant type.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Orbit rules (locked)</h4>
+          <ul>
+            <li><b>Spacing:</b> equal by button count (no manual degrees).</li>
+            <li><b>Button size:</b> fixed (does not resize with count).</li>
+            <li><b>Capacity:</b> designed to fit up to <b>7 buttons</b> with safe clearance.</li>
+            <li><b>Dot size:</b> 20px status marker for quick recognition.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4 style="margin-top:14px;">Buttons and intent</h4>
+      <ul>
+        <li><b>Industry Select:</b> swaps the KPI pack (Food, Foundry, Wastewater, etc.).</li>
+        <li><b>Ghost Busting™:</b> truth/misfire visibility (per I/O), supports “what actually happened.”</li>
+        <li><b>Predictive Breakpoints™:</b> forecasting entry point (what’s likely to happen next).</li>
+        <li><b>Fortune Teller™:</b> narrative prediction / watch items (read-only).</li>
+        <li><b>KPI Command Center™:</b> OEE / throughput / yield lens (high-level management view).</li>
+      </ul>
+
+      <h4 style="margin-top:14px;">Example scenarios</h4>
+      <ul>
+        <li><b>New customer adds a KPI pack:</b> drop in a new “Industry” definition → orbit auto-spaces, grid stays untouched.</li>
+        <li><b>Operator asks “why did it stop?”</b> jump to Ghost Busting™ → verify the exact permissive that failed (no ladder dive needed for first pass).</li>
+        <li><b>Supervisor asks “what will bite us next hour?”</b> open Predictive Breakpoints™ / Fortune Teller™ → get near-term risk calls + confidence.</li>
+      </ul>
+    `
+  },
+
+  "top-right": {
+    title: "KPI Trends",
+    html: `
+      <p class="airon-pill">KPI deck for the selected industry pack.</p>
+
+      <div class="airon-helpgrid">
+        <div>
+          <h4>What you’re looking at</h4>
+          <ul>
+            <li><b>Purpose:</b> fast read of <b>quality</b>, <b>delivery</b>, <b>inventory</b>, <b>margin</b> (pack-dependent).</li>
+            <li><b>Trend windows:</b> 24h / shift / 30-day (varies by KPI).</li>
+            <li><b>Status chips:</b> “In Spec / Strong / Healthy” are thresholds, not opinions.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Interaction rules</h4>
+          <ul>
+            <li><b>Scroll:</b> internal and hidden (standard across modules).</li>
+            <li><b>Extend:</b> add more KPI cards without breaking the grid.</li>
+            <li><b>Read-only:</b> no control, no setpoints here.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4 style="margin-top:14px;">Example scenarios</h4>
+      <ul>
+        <li><b>Quality dips:</b> pass rate drops while “I/O Watch” shows a noisy prox → confirm sensor mount / debounce, then re-check rejects.</li>
+        <li><b>On-time delivery risk:</b> shipments slip but throughput is steady → verify changeover overrun + staffing constraint.</li>
+        <li><b>Inventory turnover swings:</b> running a high-demand SKU → confirm tank farm staging, CIP windows, and palletizer availability.</li>
+        <li><b>Margin squeeze:</b> scrap/rework rises → correlate to specific line or recipe via CAT Output Trend selection.</li>
+      </ul>
+    `
+  },
+
+  "bottom-left": {
+    title: "I/O Watch",
+    html: `
+      <p class="airon-pill">Watch critical signals during the run.</p>
+
+      <div class="airon-helpgrid">
+        <div>
+          <h4>What it does</h4>
+          <ul>
+            <li><b>Pin</b> the signals that matter for the current product/shift.</li>
+            <li><b>See state + activity:</b> counters/toggles/timers (demo representation).</li>
+            <li><b>Spot intermittents:</b> the classic “works when I’m watching” failures.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Common watch list items</h4>
+          <ul>
+            <li>Case present, guard door, E-stop chain healthy</li>
+            <li>Valve feedback open/closed mismatch</li>
+            <li>Prox double-counting / missed counts</li>
+            <li>Pressure switch chatter, float switch bounce</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4 style="margin-top:14px;">Example scenarios</h4>
+      <ul>
+        <li><b>Lid won’t move:</b> pump starts but solenoid never energizes → watch DPDT switch input + solenoid output. If input toggles but output doesn’t, chase permissives/interlocks.</li>
+        <li><b>Random stops:</b> guard door flickers OFF for 50ms → add the door input, confirm chatter, then clean/adjust or replace switch.</li>
+        <li><b>Valve “stuck” alarm:</b> command ON but feedback stays OFF → verify air supply, limit switch, and mechanical bind.</li>
+      </ul>
+
+      <p style="opacity:.85; margin-top:10px;">
+        <b>Tip:</b> Pair this with Ghost Events — one tells you “something’s odd,” the other shows the live truth.
+      </p>
+    `
+  },
+
+  "bottom-center": {
+    title: "CAT Output Trend",
+    html: `
+      <p class="airon-pill">Line selector + common graph with pinning.</p>
+
+      <div class="airon-helpgrid">
+        <div>
+          <h4>Selection logic</h4>
+          <ul>
+            <li><b>Single-click:</b> toggle a line trace ON/OFF in the common graph.</li>
+            <li><b>Double-click:</b> pin/unpin a line into the default “always shown” set.</li>
+            <li><b>Pinned set:</b> survives browsing so you keep your baseline references.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Scaling for big sites</h4>
+          <ul>
+            <li><b>Independent rails:</b> left/right lists scroll separately (CAT stays fixed).</li>
+            <li><b>40+ lines:</b> browse quickly without losing context.</li>
+            <li><b>Scope:</b> switch between Plantwide and “focused line” mode (demo).</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4 style="margin-top:14px;">Example scenarios</h4>
+      <ul>
+        <li><b>Compare lines:</b> pin the two “best” lines, then toggle in a suspect line to see drift against the baseline.</li>
+        <li><b>Packaging vs. filler:</b> pin the filler line + case packer line to see if downstream is throttling upstream.</li>
+        <li><b>Customer with multiple locations:</b> left rail = Plant A lines, right rail = Plant B lines → pin cross-plant comparisons for standardization.</li>
+      </ul>
+
+      <p style="opacity:.85; margin-top:10px;">
+        <b>CAT Fire:</b> center action button is a demo affordance (video). In production it can open the CAT tablet / action center.
+      </p>
+    `
+  },
+
+  "bottom-right": {
+    title: "Fortune Teller™",
+    html: `
+      <p class="airon-pill">Read-only narrative prediction panel.</p>
+
+      <div class="airon-helpgrid">
+        <div>
+          <h4>What it provides</h4>
+          <ul>
+            <li><b>Run feel:</b> a plain-language status of stability.</li>
+            <li><b>Near-term call:</b> what’s likely to happen in the next window.</li>
+            <li><b>Confidence:</b> how sure the model/rules are about the call.</li>
+            <li><b>Watch items:</b> specific conditions to keep an eye on.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>How to interpret</h4>
+          <ul>
+            <li><b>Read-only:</b> no control actions and no alarm acknowledgment.</li>
+            <li><b>Operational use:</b> align staffing, staging, and maintenance timing.</li>
+            <li><b>Human stays in charge:</b> this is guidance, not authority.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4 style="margin-top:14px;">Example scenarios</h4>
+      <ul>
+        <li><b>“Small slowdown likely”:</b> it’s seeing rising micro-stops + inventory wobble → stage materials, check air pressure, confirm changeover readiness.</li>
+        <li><b>“Watch it” next 30 minutes:</b> trend suggests a tank will cross a low threshold → coordinate refill before the line starves.</li>
+        <li><b>Confidence drops:</b> signals disagree (sensor noise / missing tags) → fall back to standard checks and validate instrumentation.</li>
+      </ul>
+
+      <p style="opacity:.85; margin-top:10px;">
+        If something feels wrong, this panel helps you spot it sooner — it doesn’t replace your judgment.
+      </p>
+    `
+  }
+};
+
+let helpMode = false;
+
+    function postToAllFrames(msg){
+      document.querySelectorAll('iframe').forEach(f => {
+        try { f.contentWindow.postMessage(msg, '*'); } catch(e){}
+      });
+    }
+
+		    function openOverlay(title, html, footerButtons, theme){
+	      // theme: 'help' | 'settings' | undefined
+	      if(panelEl){
+	        panelEl.classList.toggle('help-theme', theme === 'help');
+	        panelEl.classList.toggle('settings-theme', theme === 'settings');
+	      }
+      titleEl.textContent = title || '';
+      bodyEl.innerHTML = html || '';
+      footEl.innerHTML = '';
+	      (footerButtons||[]).forEach(btn => {
+        const b=document.createElement('button');
+	        b.className = 'airon-btn' + (btn.className ? (' ' + btn.className) : '');
+        b.type='button';
+        b.textContent=btn.label;
+        b.addEventListener('click', btn.onClick);
+        footEl.appendChild(b);
+      });
+      overlay.hidden = false;
+    }
+
+	    function closeOverlay(){
+	      overlay.hidden = true;
+	      bodyEl.innerHTML='';
+	      footEl.innerHTML='';
+	      if(panelEl){ panelEl.classList.remove('help-theme'); panelEl.classList.remove('settings-theme'); }
+	    }
+
+    function setHelpMode(on){
+      helpMode = !!on;
+      document.body.classList.toggle('helpMode', helpMode);
+      // frames can optionally react, but parent captures clicks via helpHit overlays
+      postToAllFrames({ type:'AIRONGRID_HELP_MODE', on: helpMode });
+    }
+
+    overlay.addEventListener('click', (e) => {
+      const t = e.target;
+      if(!t || !t.getAttribute) return;
+      if(t.getAttribute('data-ov-close') !== '1') return;
+
+      // In Help-intro mode the backdrop must NOT close the overlay (click-through is required)
+      if(helpMode && t.classList && t.classList.contains('airon-overlay__backdrop')) return;
+
+      closeOverlay();
+      setHelpMode(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape' && !overlay.hidden){ closeOverlay(); setHelpMode(false); }
+    });
+
+	    function openHelpIntro(){
+      setHelpMode(true);
+      openOverlay(
+        'Help',
+        `<p class="airon-pill">Help mode is ON</p>
+         <p style="margin-top:10px; line-height:1.45;">
+           Select the item you need assistance with.
+         </p>
+         <p style="opacity:.85; margin-top:10px;">
+           Click anywhere inside a module to open its help panel.
+         </p>`,
+		        [{ label:'Close', className:'secondary', onClick: () => { closeOverlay(); setHelpMode(false); } }],
+	        'help'
+      );
+    }
+
+    // Expose stable hooks for iframe controls (more reliable than postMessage in some embeds)
+    // These are intentionally minimal and map directly to existing handlers.
+    try {
+      window.AIRON_OPEN_HELP = openHelpIntro;
+      window.AIRON_OPEN_MENU = openMenu;
+      window.AIRON_OPEN_HELP_FOR = openHelpFor;
+    } catch (e) {}
+
+    function openMenu(menu){
+      if(menu === 'plant'){
+        openOverlay('Plant Select',
+          `<p class="airon-pill">Plant selection</p>
+           <p style="margin-top:10px; opacity:.9;">Choose a plant context (demo):</p>
+           <div style="display:grid; gap:10px; margin-top:12px;">
+             <button class="airon-btn" type="button">Dressing Plant</button>
+             <button class="airon-btn" type="button">Packaging Plant</button>
+             <button class="airon-btn" type="button">Utilities</button>
+           </div>`,
+          [{ label:'Close', onClick: () => { closeOverlay(); } }]
+        );
+      } else if(menu === 'process'){
+        openOverlay('Process Select',
+          `<p class="airon-pill">Process selection</p>
+           <p style="margin-top:10px; opacity:.9;">Choose a process view (demo):</p>
+           <div style="display:grid; gap:10px; margin-top:12px;">
+             <button class="airon-btn" type="button">Line Output</button>
+             <button class="airon-btn" type="button">Tank Farm</button>
+             <button class="airon-btn" type="button">CIP</button>
+           </div>`,
+          [{ label:'Close', onClick: () => { closeOverlay(); } }]
+        );
+      } else if(menu === 'settings'){
+        openOverlay('Settings',
+          `<p class="airon-pill">Demo settings</p>
+           <div style="margin-top:8px; opacity:.75; font-size:12px; letter-spacing:.06em;">Build: 2026-01-10</div>
+           <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+             <button class="airon-btn" type="button" id="toggleGrid">Toggle Yellow Grid</button>
+           </div>
+
+           <div style="margin-top:14px; padding-top:12px; border-top:1px solid rgba(90,210,255,.10);">
+             <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+               <div>
+                 <div style="font-weight:800; letter-spacing:.08em;">Belt speed</div>
+                 <div style="opacity:.82; font-size:12px; margin-top:2px;">Controls belt teeth + corner spin sync</div>
+               </div>
+               <div style="min-width:90px; text-align:right; font-weight:800;" id="beltSpeedVal">1.0×</div>
+             </div>
+             <input id="beltSpeed" type="range" min="0.5" max="2" step="0.1" value="${window.AIRON_SYNC_MULT || 1}" style="width:100%; margin-top:10px;">
+           </div>
+
+           <p style="margin-top:10px; opacity:.85;">Affects the sync belt + corner spin only.</p>`,
+          [{ label:'Close', onClick: () => { closeOverlay(); } }],
+          'settings'
+        );
+        setTimeout(() => {
+          const t=document.getElementById('toggleGrid');
+          if(t) t.addEventListener('click', () => {
+            const g=document.getElementById('gridOverlay');
+            if(!g) return;
+            g.style.opacity = (g.style.opacity === '0') ? '1' : '0';
+          });
+
+          // Belt speed wiring
+          const s = document.getElementById('beltSpeed');
+          const v = document.getElementById('beltSpeedVal');
+          function syncVal(){
+            if(!s || !v) return;
+            const m = parseFloat(s.value) || 1;
+            v.textContent = m.toFixed(1) + '×';
+            applySyncSpeed(m);
+          }
+          if(s){
+            syncVal();
+            s.addEventListener('input', syncVal);
+            s.addEventListener('change', syncVal);
+          }
+        }, 0);
+      }
+    }
+
+    function openHelpFor(moduleKey){
+      const item = helpMap[moduleKey];
+      if(!item) return;
+
+      // Once a sector is selected, lock selection until user closes the help panel
+      setHelpMode(false);
+
+	      openOverlay(item.title, item.html, [
+	        { label:'Close', className:'secondary', onClick: () => { closeOverlay(); } }
+	      ], 'help');
+    }
+
+    // Capture help targets (iframes don't bubble clicks to parent)
+    document.querySelectorAll('.helpHit').forEach(hit => {
+      hit.addEventListener('click', () => {
+        if(!helpMode) return;
+        const k = hit.getAttribute('data-help');
+        openHelpFor(k);
+      });
+    });
+
+	    window.addEventListener('message', (ev) => {
+      const msg = ev.data || {};
+      if(msg.type === 'AIRONTOP_HELP_OPEN') openHelpIntro();
+      if(msg.type === 'AIRONTOP_MENU_OPEN') openMenu(msg.menu);
+      if(msg.type === 'AIRONGRID_HELP_TARGET') openHelpFor(msg.module);
+    });
+	  }
+
+	  // Initialize overlay wiring safely
+	  if(document.readyState === 'loading'){
+	    document.addEventListener('DOMContentLoaded', initAIRONOverlay, { once:true });
+	  } else {
+	    initAIRONOverlay();
+	  }
+
+</script>
+</body>
+</html>

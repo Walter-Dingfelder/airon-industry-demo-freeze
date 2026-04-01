@@ -1,0 +1,418 @@
+<!-- ===========================
+     AIRON BOTTOM RIGHT — Fortune Teller™ (Operator Language Only)
+     Purpose:
+     - Plain-language “what to watch” + confidence
+     - Observational only (no controls)
+     - Scrollable stack (fits whatever space is available)
+     =========================== -->
+
+<div id="airon-ft" class="airon-ft">
+  <div class="airon-ft__frame">
+    <div class="airon-ft__work" aria-label="Fortune Teller panel">
+      <div class="airon-ft__hdr">
+        <div class="airon-ft__titleRow">
+          <div class="airon-ft__title">FORTUNE TELLER™</div>
+          <div class="airon-ft__pill" title="This is guidance, not control actions.">
+            Read-only
+          </div>
+        </div>
+        <div class="airon-ft__sub">
+          Plain talk on what’s coming next — so the floor can stay ahead of it.
+        </div>
+      </div>
+
+      <!-- Summary strip -->
+      <div class="airon-ft__summary" role="group" aria-label="Confidence summary">
+        <div class="airon-ft__sumItem">
+          <div class="airon-ft__sumLabel">Run Feel</div>
+          <div class="airon-ft__chip airon-ft__chip--good">Steady</div>
+        </div>
+        <div class="airon-ft__sumItem">
+          <div class="airon-ft__sumLabel">Next 30 min</div>
+          <div class="airon-ft__chip airon-ft__chip--ok">Watch It</div>
+        </div>
+        <div class="airon-ft__sumItem">
+          <div class="airon-ft__sumLabel">Confidence</div>
+          <div class="airon-ft__chip airon-ft__chip--num">86%</div>
+        </div>
+      </div>
+
+      <!-- Scrollable feed -->
+      <div class="airon-ft__feed" aria-label="Fortune Teller cards">
+        <!-- Card 1 -->
+        <div class="airon-ft__card airon-ft__card--good">
+          <div class="airon-ft__cardTop">
+            <div class="airon-ft__dot airon-ft__dot--green"></div>
+            <div class="airon-ft__cardTitle">You’re running smooth</div>
+            <div class="airon-ft__badge airon-ft__badge--good">Good</div>
+          </div>
+          <div class="airon-ft__cardBody">
+            Nothing looks like it’s fighting you right now. If you keep the pace and
+            keep an eye on changeovers, this run should stay clean.
+          </div>
+          <div class="airon-ft__cardFoot">
+            <span class="airon-ft__hint">Keep doing what you’re doing.</span>
+            <span class="airon-ft__time">Now</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="airon-ft__card airon-ft__card--warn">
+          <div class="airon-ft__cardTop">
+            <div class="airon-ft__dot airon-ft__dot--amber"></div>
+            <div class="airon-ft__cardTitle">Small slowdown likely</div>
+            <div class="airon-ft__badge airon-ft__badge--warn">Watch It</div>
+          </div>
+          <div class="airon-ft__cardBody">
+            If you hear the pump kick more often or see uneven flow, it may be the start
+            of a short hiccup. Not a stop — just a “don’t ignore it” moment.
+          </div>
+          <div class="airon-ft__cardFoot">
+            <span class="airon-ft__hint">Listen + glance at the key gauges.</span>
+            <span class="airon-ft__time">Next 30 min</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="airon-ft__card airon-ft__card--neutral">
+          <div class="airon-ft__cardTop">
+            <div class="airon-ft__dot airon-ft__dot--cyan"></div>
+            <div class="airon-ft__cardTitle">If the line feels “touchy”</div>
+            <div class="airon-ft__badge airon-ft__badge--neutral">Heads Up</div>
+          </div>
+          <div class="airon-ft__cardBody">
+            If you notice a pattern like “works… then doesn’t… then works again,” it’s usually
+            a sensor/switch or a borderline interlock. That’s the kind of thing worth watching early.
+          </div>
+          <div class="airon-ft__cardFoot">
+            <span class="airon-ft__hint">Add it to I/O Watch if it’s acting up.</span>
+            <span class="airon-ft__time">Any time</span>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="airon-ft__card airon-ft__card--note">
+          <div class="airon-ft__cardTop">
+            <div class="airon-ft__dot airon-ft__dot--purple"></div>
+            <div class="airon-ft__cardTitle">Quick win</div>
+            <div class="airon-ft__badge airon-ft__badge--note">Tip</div>
+          </div>
+          <div class="airon-ft__cardBody">
+            If you’re about to do a changeover, build your watch list first. It saves steps
+            when something acts weird right after the first restart.
+          </div>
+          <div class="airon-ft__cardFoot">
+            <span class="airon-ft__hint">Prep saves trips.</span>
+            <span class="airon-ft__time">Before changeover</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="airon-ft__footer">
+        <div class="airon-ft__footNote">
+          If something feels wrong, this panel helps you spot it sooner — it doesn’t replace your judgement.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* ===========================
+   AIRON FT CSS
+   Prefix: .airon-ft / .airon-ft__
+   =========================== */
+
+#airon-ft,
+#airon-ft * { box-sizing: border-box; }
+
+#airon-ft.airon-ft{
+  --bg1: rgba(8,12,22,.92);
+  --bg2: rgba(4,6,10,.92);
+  --gold: #f2c34b;
+  --text: rgba(245,250,255,.95);
+  --muted: rgba(210,225,255,.70);
+  --radius: 18px;
+
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  color: var(--text);
+}
+
+#airon-ft .airon-ft__frame{
+  width: 100%;
+  max-width: 420px;   /* 🔒 RIGHT COLUMN LOCK */
+  height: 100%;
+  margin-left: auto; /* 🔒 push to right column */
+  margin-right: 0;
+
+  border-radius: calc(var(--radius) + 10px);
+  border: 1px solid rgba(120,170,255,.16);
+  background:
+    radial-gradient(1100px 420px at 45% -10%, rgba(90,210,255,.10), transparent 55%),
+    radial-gradient(900px 380px at 18% 40%, rgba(120,150,255,.10), transparent 60%),
+    radial-gradient(900px 380px at 82% 45%, rgba(242,195,75,.09), transparent 60%),
+    linear-gradient(180deg, var(--bg1), var(--bg2));
+  box-shadow:
+    0 0 0 1px rgba(242,195,75,.06) inset,
+    0 14px 44px rgba(0,0,0,.55),
+    0 0 28px rgba(90,210,255,.08);
+  overflow: hidden;
+  position: relative;
+  min-height: 420px;
+}
+
+#airon-ft .airon-ft__work{
+  position: absolute;
+  inset: 16px 18px;
+  border-radius: calc(var(--radius) + 6px);
+  border: 1px solid rgba(120,170,255,.12);
+  background:
+    radial-gradient(900px 340px at 15% 35%, rgba(120,150,255,.09), transparent 60%),
+    radial-gradient(900px 340px at 85% 45%, rgba(242,195,75,.08), transparent 60%);
+  box-shadow:
+    0 0 0 1px rgba(242,195,75,.05) inset,
+    0 0 18px rgba(90,210,255,.06);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#airon-ft .airon-ft__hdr{
+  padding: 16px 16px 10px;
+}
+
+#airon-ft .airon-ft__titleRow{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+#airon-ft .airon-ft__title{
+  font-weight: 900;
+  letter-spacing: .18em;
+  font-size: 14px;
+  padding-left: .18em;
+  color: rgba(255,255,255,.96);
+  text-shadow: 0 0 18px rgba(0,0,0,.55);
+}
+
+#airon-ft .airon-ft__pill{
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: rgba(255,240,205,.92);
+  border: 1px solid rgba(242,195,75,.18);
+  background: rgba(0,0,0,.16);
+  box-shadow: 0 0 0 1px rgba(242,195,75,.06) inset;
+  user-select: none;
+}
+
+#airon-ft .airon-ft__sub{
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.25;
+}
+
+#airon-ft .airon-ft__summary{
+  margin: 0 16px 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(120,170,255,.12);
+  background: rgba(0,0,0,.16);
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+#airon-ft .airon-ft__sumItem{
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+#airon-ft .airon-ft__sumLabel{
+  font-size: 11px;
+  color: rgba(210,225,255,.72);
+}
+
+#airon-ft .airon-ft__chip{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: .02em;
+  border: 1px solid rgba(242,195,75,.14);
+  background: rgba(10,10,14,.30);
+  color: rgba(255,255,255,.95);
+  white-space: nowrap;
+}
+
+#airon-ft .airon-ft__chip--good{ border-color: rgba(120,255,170,.22); }
+#airon-ft .airon-ft__chip--ok{ border-color: rgba(242,195,75,.22); }
+#airon-ft .airon-ft__chip--num{ border-color: rgba(120,170,255,.20); }
+
+#airon-ft .airon-ft__feed{
+  margin: 0 10px 10px;
+  padding: 2px 6px 8px;
+  overflow: auto;
+  flex: 1 1 auto;
+}
+
+/* nice scrollbars (won't break anything if ignored) */
+#airon-ft .airon-ft__feed::-webkit-scrollbar{ width: 10px; }
+#airon-ft .airon-ft__feed::-webkit-scrollbar-thumb{
+  background: rgba(242,195,75,.18);
+  border: 2px solid rgba(0,0,0,0);
+  background-clip: padding-box;
+  border-radius: 999px;
+}
+#airon-ft .airon-ft__feed::-webkit-scrollbar-track{ background: rgba(0,0,0,.12); }
+
+#airon-ft .airon-ft__card{
+  border-radius: 16px;
+  border: 1px solid rgba(120,170,255,.12);
+  background:
+    radial-gradient(circle at 30% 10%, rgba(120,170,255,.08), transparent 55%),
+    linear-gradient(180deg, rgba(18,25,44,.55), rgba(8,10,18,.52));
+  box-shadow:
+    0 0 0 1px rgba(242,195,75,.04) inset,
+    0 10px 26px rgba(0,0,0,.40);
+  padding: 12px 12px 10px;
+  margin: 10px 6px;
+}
+
+#airon-ft .airon-ft__cardTop{
+  display: grid;
+  grid-template-columns: 10px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+#airon-ft .airon-ft__dot{
+  width: 9px;
+  height: 9px;
+  border-radius: 99px;
+  box-shadow: 0 0 16px currentColor;
+}
+#airon-ft .airon-ft__dot--green{ color: rgba(130,255,190,.95); background: currentColor; }
+#airon-ft .airon-ft__dot--amber{ color: rgba(242,195,75,.95); background: currentColor; }
+#airon-ft .airon-ft__dot--cyan{ color: rgba(90,210,255,.95); background: currentColor; }
+#airon-ft .airon-ft__dot--purple{ color: rgba(185,140,255,.92); background: currentColor; }
+
+#airon-ft .airon-ft__cardTitle{
+  font-weight: 900;
+  color: rgba(255,255,255,.96);
+  font-size: 13px;
+  letter-spacing: .02em;
+}
+
+#airon-ft .airon-ft__badge{
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 900;
+  border: 1px solid rgba(242,195,75,.16);
+  background: rgba(0,0,0,.18);
+  color: rgba(255,255,255,.92);
+  white-space: nowrap;
+}
+#airon-ft .airon-ft__badge--good{ border-color: rgba(130,255,190,.22); }
+#airon-ft .airon-ft__badge--warn{ border-color: rgba(242,195,75,.26); }
+#airon-ft .airon-ft__badge--neutral{ border-color: rgba(90,210,255,.22); }
+#airon-ft .airon-ft__badge--note{ border-color: rgba(185,140,255,.22); }
+
+#airon-ft .airon-ft__cardBody{
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(245,250,255,.92);
+}
+
+#airon-ft .airon-ft__cardFoot{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(120,170,255,.10);
+}
+
+#airon-ft .airon-ft__hint{
+  font-size: 11px;
+  color: rgba(255,240,205,.92);
+}
+
+#airon-ft .airon-ft__time{
+  font-size: 11px;
+  color: rgba(210,225,255,.70);
+}
+
+#airon-ft .airon-ft__footer{
+  padding: 10px 16px 14px;
+  border-top: 1px solid rgba(120,170,255,.10);
+  background: rgba(0,0,0,.10);
+}
+
+#airon-ft .airon-ft__footNote{
+  font-size: 11px;
+  line-height: 1.3;
+  color: rgba(210,225,255,.70);
+}
+
+/* === R4 Hard-Lock overrides === */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;}
+
+
+
+
+/* === R5 FIT-TO-GRID OVERRIDES (fills iframe cell exactly) === */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:transparent;}
+#airon-ft, .airon-ft{
+  width:100% !important;
+  height:100% !important;
+  margin:0 !important;
+}
+.airon-ft__frame{
+  width:100% !important;
+  height:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+}
+.airon-ft__work{
+  width:100% !important;
+  height:100% !important;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+.airon-ft__stack, .airon-ft__list, .airon-ft__body{
+  flex:1 1 auto;
+  min-height:0;
+  overflow:auto;
+}
+
+</style>
+
+<script>
+(() => {
+  "use strict";
+  // Observational only. No control actions. No cross-module wiring here.
+  // (Later we can feed these cards from your Fortune Teller engine.)
+})();
+</script>
